@@ -69,6 +69,14 @@ Current phase: **6**
   - Notes: JS logic is checked manually in the browser, not unit-tested. Run with
     `python -m uvicorn ...` (the `uvicorn.exe` launcher can be blocked on Windows).
   - Idea for later (optional): conversation memory (send last turns, rewrite the question before search).
-- [ ] Dockerfile + docker-compose
-- [ ] Basic tests
-- [ ] Final README (GIF, technical decisions, how to run)
+- [x] Dockerfile + docker-compose (phase 6b, branch `chore/phase-6b-docker-readme`)
+  - `python:3.14-slim` (no fallback needed), deps layer cached, non-root user, only `app/` copied
+    (no `.env`/PDFs/index in the image), HEALTHCHECK on `/health`, one uvicorn worker.
+  - Compose: `env_file: .env`, named volumes `chroma_db` and `pdfs`, port bound to `127.0.0.1`.
+  - Verified for real: build ~70 s, image 875 MB on disk, healthy in ~6 s, upload + ask worked,
+    index persisted across `down`/`up`, key not found in image history/inspect/logs.
+- [x] Basic tests: added `tests/test_ingest.py` (3 tests); suite covers chunking, embeddings, store,
+  rag, ingest, API and frontend with no network or API calls.
+- [x] Final README (portfolio version with Mermaid diagram, decisions, limitations, Docker + local run).
+  - Pending on the user: record `docs/demo.gif` (< 3 MB) or remove the image line from the README.
+- Project complete. Optional future work: conversation memory, delete endpoint, OCR, CI.
