@@ -94,6 +94,6 @@ pip install -r requirements.txt
 python -m app.ingest                                # phase 2 (3: also embeds and stores)
 python -m app.store "question"                      # phase 3: similarity search
 python -m app.rag "question"                        # phase 4: answer with sources
-uvicorn app.main:app --reload                       # phase 5: API, docs at /docs
+python -m uvicorn app.main:app --reload             # phase 5: API, docs at /docs (UI at /)
 pytest
 ```

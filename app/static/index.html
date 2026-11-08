@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+  <title>notes-rag</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1>notes-rag</h1>
+    <p class="muted">Ask questions about your class notes. Answers cite document and page.</p>
+
+    <section aria-labelledby="documents-heading">
+      <h2 id="documents-heading">Documents</h2>
+      <ul id="documents-list"></ul>
+      <button id="refresh-button" type="button">Refresh</button>
+      <p id="documents-status" aria-live="polite"></p>
+    </section>
+
+    <section aria-labelledby="upload-heading">
+      <h2 id="upload-heading">Upload</h2>
+      <form id="upload-form">
+        <label for="file-input">PDF file</label>
+        <input id="file-input" type="file" accept=".pdf,application/pdf" required>
+        <button id="upload-button">Upload</button>
+      </form>
+      <p id="upload-status" aria-live="polite"></p>
+    </section>
+
+    <section aria-labelledby="ask-heading">
+      <h2 id="ask-heading">Ask</h2>
+      <form id="ask-form">
+        <label for="question-input">Question</label>
+        <input id="question-input" type="text" maxlength="2000" required autocomplete="off">
+        <button id="ask-button">Ask</button>
+      </form>
+      <p id="ask-status" aria-live="polite"></p>
+      <div id="answer" aria-live="polite" hidden>
+        <p id="answer-text"></p>
+        <h3 id="sources-heading"></h3>
+        <ol id="sources-list"></ol>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
