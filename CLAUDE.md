@@ -95,5 +95,6 @@ python -m app.ingest                                # phase 2 (3: also embeds an
 python -m app.store "question"                      # phase 3: similarity search
 python -m app.rag "question"                        # phase 4: answer with sources
 python -m uvicorn app.main:app --reload             # phase 5: API, docs at /docs (UI at /)
+docker compose up --build -d                        # phase 6: same app in Docker (needs .env)
 pytest
 ```

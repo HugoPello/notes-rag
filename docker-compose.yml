@@ -1,0 +1,15 @@
+services:
+  notes-rag:
+    build: .
+    image: notes-rag
+    ports:
+      - "127.0.0.1:8000:8000"  # loopback only: the API has no authentication
+    env_file: .env
+    volumes:
+      - chroma_db:/app/chroma_db
+      - pdfs:/app/data
+    restart: unless-stopped
+
+volumes:
+  chroma_db:
+  pdfs:
