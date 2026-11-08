@@ -2,6 +2,7 @@
 
 import sys
 from pathlib import Path
+from typing import BinaryIO
 
 from dotenv import load_dotenv
 from google.genai.errors import APIError
@@ -16,9 +17,9 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 PREVIEW_CHARS = 80
 
 
-def read_pdf_pages(path: Path) -> list[str]:
+def read_pdf_pages(source: Path | BinaryIO) -> list[str]:
     """Return the text of each page (empty string if a page has no extractable text)."""
-    return [page.extract_text() or "" for page in PdfReader(path).pages]
+    return [page.extract_text() or "" for page in PdfReader(source).pages]
 
 
 def main() -> None:

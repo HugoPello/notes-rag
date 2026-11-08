@@ -1,7 +1,7 @@
 import pytest
 
 from app.chunking import Chunk
-from app.store import get_collection, replace_document, search
+from app.store import document_hash, get_collection, list_documents, replace_document, search
 
 
 def test_closest_vector_first(tmp_path):
@@ -64,3 +64,38 @@ def test_mismatched_lengths_raise(tmp_path):
     collection = get_collection(tmp_path)
     with pytest.raises(ValueError):
         replace_document(collection, "a.pdf", [Chunk("a.pdf", 1, "one")], [])
+
+
+def test_hash_round_trip(tmp_path):
+    collection = get_collection(tmp_path)
+    replace_document(collection, "a.pdf", [Chunk("a.pdf", 1, "one"), Chunk("a.pdf", 2, "two")],
+                     [[1, 0, 0], [0, 1, 0]], file_hash="abc123")
+
+    assert document_hash(collection, "a.pdf") == "abc123"
+
+
+def test_hash_is_none_without_hash_or_document(tmp_path):
+    collection = get_collection(tmp_path)
+    replace_document(collection, "a.pdf", [Chunk("a.pdf", 1, "one")], [[1, 0, 0]])
+
+    assert document_hash(collection, "a.pdf") is None
+    assert document_hash(collection, "missing.pdf") is None
+
+
+def test_list_documents_counts_per_document(tmp_path):
+    collection = get_collection(tmp_path)
+    replace_document(collection, "b.pdf", [Chunk("b.pdf", 1, "x")], [[0, 1, 0]])
+    replace_document(collection, "a.pdf", [Chunk("a.pdf", 1, "y"), Chunk("a.pdf", 2, "z")],
+                     [[1, 0, 0], [0, 0, 1]])
+
+    assert list_documents(collection) == {"a.pdf": 2, "b.pdf": 1}
+    assert list(list_documents(collection)) == ["a.pdf", "b.pdf"]
+
+
+def test_replace_without_hash_clears_old_hash(tmp_path):
+    collection = get_collection(tmp_path)
+    replace_document(collection, "a.pdf", [Chunk("a.pdf", 1, "one")], [[1, 0, 0]], file_hash="abc123")
+
+    replace_document(collection, "a.pdf", [Chunk("a.pdf", 1, "one")], [[1, 0, 0]])
+
+    assert document_hash(collection, "a.pdf") is None

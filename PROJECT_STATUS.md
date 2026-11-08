@@ -6,7 +6,7 @@ Single source of truth for progress. **Read this before touching anything.**
 - Updated by the orchestrator when the user approves a phase's commit, BEFORE the user commits
   (so the update lands in the same commit). Keep entries short: what was done, what changed vs. plan.
 
-Current phase: **4**
+Current phase: **5**
 
 ## Phase 1 — Setup
 - [x] Folder structure (`app/__init__.py`, `data/.gitkeep`, `pytest.ini`)
@@ -47,7 +47,17 @@ Current phase: **4**
   as a request); the "I don't know" message is always in English.
 
 ## Phase 5 — FastAPI
-- [ ] `app/main.py` (upload PDF, ask, list documents)
+- [x] `app/main.py` (upload PDF, ask, list documents) + `tests/test_main.py`
+- Branch: `feat/phase-5-fastapi`. Run with `uvicorn app.main:app --reload` (docs at `/docs`).
+- Endpoints: `GET /health`, `GET /documents`, `POST /documents`, `POST /ask`. Sync `def` endpoints.
+  Upload: validate -> embed -> save to `data/` -> index; sha256 stored in chunk metadata, identical
+  re-upload returns `unchanged` with no API calls. No CORS (phase 6 serves the frontend from this app).
+- Deviations (user-authorized, closed files touched): `app/store.py` (additive: `file_hash`,
+  `document_hash`, `list_documents`), `app/ingest.py` (type hint of `read_pdf_pages` only),
+  `tests/test_store.py` (new tests + one import).
+- Notes: pinned `fastapi==0.162.2`, `uvicorn==0.54.0`, `python-multipart==0.0.33`, `httpx==0.28.1`.
+  Known limits: docs indexed before this phase have no hash (re-embedded once on first API upload);
+  `python -m app.ingest` clears the hash; unusual pypdf errors other than `PdfReadError` give a 500.
 
 ## Phase 6 — Frontend, Docker, tests, final README
 - [ ] Minimal frontend
