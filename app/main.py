@@ -2,6 +2,7 @@
 
 import hashlib
 import io
+import mimetypes
 from functools import cache
 from pathlib import Path, PureWindowsPath
 from typing import Annotated, Literal
@@ -9,7 +10,8 @@ from typing import Annotated, Literal
 from chromadb.api.models.Collection import Collection
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Request, UploadFile
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from google.genai.errors import APIError
 from pydantic import BaseModel, StringConstraints
 from pypdf.errors import PdfReadError
@@ -22,9 +24,14 @@ from app.store import document_hash, get_collection, list_documents, replace_doc
 
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 PDF_MAGIC = b"%PDF-"
+STATIC_DIR = Path(__file__).parent / "static"
+
+# The Windows registry can map .js to text/plain, which browsers refuse to run as a script.
+mimetypes.add_type("text/javascript", ".js")
 
 load_dotenv()
 app = FastAPI(title="notes-rag")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 @cache
@@ -83,6 +90,11 @@ class UploadResult(BaseModel):
     document: str
     chunks: int
     status: Literal["indexed", "unchanged"]
+
+
+@app.get("/", include_in_schema=False)
+def index() -> FileResponse:
+    return FileResponse(STATIC_DIR / "index.html")
 
 
 @app.get("/health")

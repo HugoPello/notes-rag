@@ -6,7 +6,7 @@ Single source of truth for progress. **Read this before touching anything.**
 - Updated by the orchestrator when the user approves a phase's commit, BEFORE the user commits
   (so the update lands in the same commit). Keep entries short: what was done, what changed vs. plan.
 
-Current phase: **5**
+Current phase: **6**
 
 ## Phase 1 — Setup
 - [x] Folder structure (`app/__init__.py`, `data/.gitkeep`, `pytest.ini`)
@@ -60,7 +60,15 @@ Current phase: **5**
   `python -m app.ingest` clears the hash; unusual pypdf errors other than `PdfReadError` give a 500.
 
 ## Phase 6 — Frontend, Docker, tests, final README
-- [ ] Minimal frontend
+- [x] Minimal frontend (phase 6a, branch `feat/phase-6a-frontend`)
+  - Plain HTML/CSS/JS in `app/static/` (no framework, no build, works offline), served by FastAPI:
+    `GET /` returns `index.html`, files under `/static`. CSP `default-src 'self'`; server text is
+    rendered with `textContent` only (a test guards against `innerHTML`). `tests/test_frontend.py`.
+  - Deviation (user-authorized, closed file touched): `app/main.py`, additive lines only (static mount,
+    `GET /`, `.js` mimetype fix for Windows).
+  - Notes: JS logic is checked manually in the browser, not unit-tested. Run with
+    `python -m uvicorn ...` (the `uvicorn.exe` launcher can be blocked on Windows).
+  - Idea for later (optional): conversation memory (send last turns, rewrite the question before search).
 - [ ] Dockerfile + docker-compose
 - [ ] Basic tests
 - [ ] Final README (GIF, technical decisions, how to run)

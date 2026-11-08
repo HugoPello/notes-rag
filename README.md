@@ -4,7 +4,7 @@ Chat with your class notes: a RAG app that answers questions from your PDFs and 
 
 ## Status
 
-Under development: phase 5 of 6 (FastAPI: upload PDFs, list them and ask questions over HTTP).
+Under development: phase 6 of 6 (web UI in progress; Docker and final README pending).
 
 ## Planned stack
 
@@ -51,7 +51,7 @@ Note: if `EMBEDDING_DIM` in `app/embeddings.py` changes, delete `chroma_db/` and
 ## Run the API
 
 ```
-uvicorn app.main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
 Interactive docs: http://127.0.0.1:8000/docs
@@ -79,6 +79,19 @@ curl.exe -X POST http://127.0.0.1:8000/ask -H "Content-Type: application/json" -
 
 where `question.json` contains `{"question": "How does Android store data?"}` (a file avoids
 PowerShell quoting problems).
+
+## Web UI
+
+```
+python -m uvicorn app.main:app --reload
+```
+
+Open http://127.0.0.1:8000/ to list the indexed documents, upload a PDF and ask questions. The
+answer shows its sources (document and page), or a distinct "I don't know" when the notes do not
+cover the question.
+
+It is plain HTML, CSS and JavaScript served by FastAPI itself (`app/static/`): no build step, no
+CDN, works offline, same origin (so no CORS).
 
 ## License
 
