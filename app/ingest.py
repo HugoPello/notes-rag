@@ -1,11 +1,16 @@
-"""Read PDFs from data/ and print their chunks. Run with: python -m app.ingest"""
+"""Read PDFs from data/, chunk them, embed them and store them. Run with: python -m app.ingest"""
 
+import sys
 from pathlib import Path
 
+from dotenv import load_dotenv
+from google.genai.errors import APIError
 from pypdf import PdfReader
 from pypdf.errors import PdfReadError
 
 from app.chunking import Chunk, chunk_pages
+from app.embeddings import embed_documents, get_client
+from app.store import get_collection, replace_document
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 PREVIEW_CHARS = 80
@@ -17,10 +22,18 @@ def read_pdf_pages(path: Path) -> list[str]:
 
 
 def main() -> None:
+    load_dotenv()
     pdfs = sorted(DATA_DIR.glob("*.pdf"))
     if not pdfs:
         print(f"No PDFs found in {DATA_DIR}. Put your class PDFs there and run again.")
         return
+
+    try:
+        get_client()  # fail before doing any work if the key is missing
+    except RuntimeError as error:
+        print(error)
+        sys.exit(1)
+    collection = get_collection()
 
     print(f"Found {len(pdfs)} PDF(s) in data/")
     all_chunks: list[Chunk] = []
@@ -43,8 +56,20 @@ def main() -> None:
             seen_in_page[chunk.page] = n
             print(f"  [p.{chunk.page} #{n}] ({len(chunk.text)} chars) {chunk.text[:PREVIEW_CHARS]}...")
 
+        # Embed first, delete old data second: if the API fails, the old index stays intact.
+        try:
+            vectors = embed_documents([chunk.text for chunk in chunks])
+            replace_document(collection, pdf.name, chunks, vectors)
+        except APIError as error:
+            print(f"FAILED to store {pdf.name}: {error}")
+            continue
+        print(f"  stored {len(chunks)} chunks")
+
     documents = len({chunk.document for chunk in all_chunks})
-    print(f"Total: {len(all_chunks)} chunks from {documents} document(s)")
+    print(
+        f"Total: {len(all_chunks)} chunks from {documents} document(s); "
+        f"index now has {collection.count()} chunks"
+    )
 
 
 if __name__ == "__main__":

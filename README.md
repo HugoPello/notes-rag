@@ -4,7 +4,7 @@ Chat with your class notes: a RAG app that answers questions from your PDFs and 
 
 ## Status
 
-Under development: phase 1 of 6 (setup) is done. There is nothing to run yet.
+Under development: phase 3 of 6 (embeddings and ChromaDB with console search).
 
 ## Planned stack
 
@@ -36,7 +36,16 @@ pip install -r requirements.txt
 pytest
 ```
 
-Copy `.env.example` to `.env` and set `GEMINI_API_KEY` once the Gemini phases land.
+Copy `.env.example` to `.env` and set `GEMINI_API_KEY` (get one in Google AI Studio).
+
+Put your PDFs in `data/`, then:
+
+```
+python -m app.ingest                      # chunk, embed and store the PDFs (safe to re-run)
+python -m app.store "your question"       # show the most similar chunks with document and page
+```
+
+Note: if `EMBEDDING_DIM` in `app/embeddings.py` changes, delete `chroma_db/` and re-ingest.
 
 ## License
 
