@@ -6,7 +6,7 @@ Single source of truth for progress. **Read this before touching anything.**
 - Updated by the orchestrator when the user approves a phase's commit, BEFORE the user commits
   (so the update lands in the same commit). Keep entries short: what was done, what changed vs. plan.
 
-Current phase: **6**
+Current phase: **done** (all 6 phases complete)
 
 ## Phase 1 — Setup
 - [x] Folder structure (`app/__init__.py`, `data/.gitkeep`, `pytest.ini`)
@@ -78,5 +78,7 @@ Current phase: **6**
 - [x] Basic tests: added `tests/test_ingest.py` (3 tests); suite covers chunking, embeddings, store,
   rag, ingest, API and frontend with no network or API calls.
 - [x] Final README (portfolio version with Mermaid diagram, decisions, limitations, Docker + local run).
-  - Pending on the user: record `docs/demo.gif` (< 3 MB) or remove the image line from the README.
-- Project complete. Optional future work: conversation memory, delete endpoint, OCR, CI.
+  - Demo GIF/video skipped for now (a 38 MB GIF was too big for the repo); the image line and the
+    `docs/` entry were removed from the README. Option for later: upload a short MP4 through the
+    GitHub README editor, or add a GIF under 3 MB as `docs/demo.gif`.
+- Project complete: all phases merged into `main`. Optional future work: conversation memory, delete endpoint, OCR, CI.
