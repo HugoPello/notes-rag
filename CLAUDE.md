@@ -91,6 +91,9 @@ goes through the orchestrator. Every subagent must read `PROJECT_STATUS.md` firs
 ```
 python -m venv .venv && .venv\Scripts\activate     # Windows
 pip install -r requirements.txt
-python -m app.ingest                                # phase 2
+python -m app.ingest                                # phase 2 (3: also embeds and stores)
+python -m app.store "question"                      # phase 3: similarity search
+python -m app.rag "question"                        # phase 4: answer with sources
+uvicorn app.main:app --reload                       # phase 5: API, docs at /docs
 pytest
 ```

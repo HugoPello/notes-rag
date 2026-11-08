@@ -45,9 +45,17 @@ def chunk_id(document: str, index: int) -> str:
 
 
 def replace_document(
-    collection: Collection, document: str, chunks: list[Chunk], embeddings: list[list[float]]
+    collection: Collection,
+    document: str,
+    chunks: list[Chunk],
+    embeddings: list[list[float]],
+    file_hash: str | None = None,
 ) -> None:
-    """Replace everything stored for `document` with the given chunks."""
+    """Replace everything stored for `document` with the given chunks.
+
+    If `file_hash` is given (sha256 of the PDF), it is stored on every chunk so the API
+    can skip re-indexing an identical file.
+    """
     if len(chunks) != len(embeddings):
         raise ValueError(f"{len(chunks)} chunks but {len(embeddings)} embeddings")
 
@@ -55,12 +63,34 @@ def replace_document(
     collection.delete(where={"document": document})
     if not chunks:
         return
+    metadatas = []
+    for chunk in chunks:
+        metadata: dict[str, str | int] = {"document": chunk.document, "page": chunk.page}
+        if file_hash is not None:  # Chroma rejects None values, so only add the key when set
+            metadata["sha256"] = file_hash
+        metadatas.append(metadata)
     collection.add(
         ids=[chunk_id(document, i) for i in range(len(chunks))],
         embeddings=embeddings,
         documents=[chunk.text for chunk in chunks],
-        metadatas=[{"document": chunk.document, "page": chunk.page} for chunk in chunks],
+        metadatas=metadatas,
     )
+
+
+def document_hash(collection: Collection, document: str) -> str | None:
+    """The stored sha256 of `document`, or None if it is not indexed or has no hash."""
+    found = collection.get(where={"document": document}, limit=1, include=["metadatas"])
+    if not found["metadatas"]:
+        return None
+    return found["metadatas"][0].get("sha256")
+
+
+def list_documents(collection: Collection) -> dict[str, int]:
+    """Number of chunks per indexed document, sorted by name."""
+    counts: dict[str, int] = {}
+    for metadata in collection.get(include=["metadatas"])["metadatas"]:
+        counts[metadata["document"]] = counts.get(metadata["document"], 0) + 1
+    return dict(sorted(counts.items()))
 
 
 def search(collection: Collection, query_embedding: list[float], k: int = SEARCH_K) -> list[SearchResult]:
