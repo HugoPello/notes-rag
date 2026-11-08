@@ -6,7 +6,7 @@ Single source of truth for progress. **Read this before touching anything.**
 - Updated by the orchestrator when the user approves a phase's commit, BEFORE the user commits
   (so the update lands in the same commit). Keep entries short: what was done, what changed vs. plan.
 
-Current phase: **3**
+Current phase: **4**
 
 ## Phase 1 — Setup
 - [x] Folder structure (`app/__init__.py`, `data/.gitkeep`, `pytest.ini`)
@@ -35,7 +35,16 @@ Current phase: **3**
   Known limits: a PDF removed from `data/` stays in the index; failed PDFs still count in the total line.
 
 ## Phase 4 — RAG on console
-- [ ] `app/rag.py` (top-k retrieval, Gemini answer, sources, "I don't know")
+- [x] `app/rag.py` (top-k retrieval, Gemini answer, sources, "I don't know") + `tests/test_rag.py`
+- Branch: `feat/phase-4-rag`. Run with `python -m app.rag "question"`.
+- Notes: model `gemini-3.5-flash-lite` (`MODEL` constant), `thinking_level="minimal"`, no temperature.
+  Sources are built by Python from `[n]` citations (the model only writes numbers). "I don't know" is
+  decided by the model via the `NOT_IN_NOTES` code word; no similarity threshold (scores cluster at
+  ~0.73). Retry loop duplicated from `embeddings.py` on purpose (that phase is closed).
+  Real smoke test: single-doc OK, unanswerable -> "I don't know" OK.
+  Known limits: k=5 can miss pages in cross-document questions (TCP/UDP case); not checked whether the
+  model is a preview; free-tier embedding quota is easy to exhaust when re-ingesting (each text counts
+  as a request); the "I don't know" message is always in English.
 
 ## Phase 5 — FastAPI
 - [ ] `app/main.py` (upload PDF, ask, list documents)
