@@ -6,7 +6,7 @@ Single source of truth for progress. **Read this before touching anything.**
 - Updated by the orchestrator when the user approves a phase's commit, BEFORE the user commits
   (so the update lands in the same commit). Keep entries short: what was done, what changed vs. plan.
 
-Current phase: **2**
+Current phase: **3**
 
 ## Phase 1 — Setup
 - [x] Folder structure (`app/__init__.py`, `data/.gitkeep`, `pytest.ini`)
@@ -27,8 +27,12 @@ Current phase: **2**
   PDF is read once. Known limit: some PDFs extract with spaced letters ("SISTE MAS"); comes from the PDF.
 
 ## Phase 3 — Embeddings + ChromaDB
-- [ ] Check ChromaDB installs on Python 3.14 (ask user if not)
-- [ ] `app/embeddings.py`, `app/store.py`, console similarity search
+- [x] Check ChromaDB installs on Python 3.14 (chromadb 1.5.9 installs and runs; no downgrade needed)
+- [x] `app/embeddings.py`, `app/store.py`, console similarity search (`python -m app.store "question"`)
+- Branch: `feat/phase-3-embeddings-store`.
+- Notes: `gemini-embedding-001`, 768 dims, cosine, batch size 50 (API max is 100). `ingest` now also
+  stores (embed first, then delete-by-document + add). `python-dotenv` pinned explicitly.
+  Known limits: a PDF removed from `data/` stays in the index; failed PDFs still count in the total line.
 
 ## Phase 4 — RAG on console
 - [ ] `app/rag.py` (top-k retrieval, Gemini answer, sources, "I don't know")
