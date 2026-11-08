@@ -6,7 +6,7 @@ Single source of truth for progress. **Read this before touching anything.**
 - Updated by the orchestrator when the user approves a phase's commit, BEFORE the user commits
   (so the update lands in the same commit). Keep entries short: what was done, what changed vs. plan.
 
-Current phase: **1**
+Current phase: **2**
 
 ## Phase 1 — Setup
 - [x] Folder structure (`app/__init__.py`, `data/.gitkeep`, `pytest.ini`)
@@ -19,9 +19,12 @@ Current phase: **1**
   `test_chunking.py` (git does not track empty folders).
 
 ## Phase 2 — Ingestion
-- [ ] `app/chunking.py` (pure function, page-aware, ~700 chars / ~100 overlap)
-- [ ] `app/ingest.py` (`python -m app.ingest` prints chunks per document)
-- [ ] `tests/test_chunking.py`
+- [x] `app/chunking.py` (pure function, page-aware, ~700 chars / ~100 overlap)
+- [x] `app/ingest.py` (`python -m app.ingest` prints chunks per document)
+- [x] `tests/test_chunking.py` (10 tests, strings only)
+- Branch: `feat/phase-2-ingestion`.
+- Notes: deviation: no `ingest_pdf` wrapper; `main()` calls `read_pdf_pages` + `chunk_pages` so each
+  PDF is read once. Known limit: some PDFs extract with spaced letters ("SISTE MAS"); comes from the PDF.
 
 ## Phase 3 — Embeddings + ChromaDB
 - [ ] Check ChromaDB installs on Python 3.14 (ask user if not)
