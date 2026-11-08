@@ -125,7 +125,6 @@ notes-rag/
   data/             # your PDFs (git-ignored)
   Dockerfile        # image: Python slim, non-root user, healthcheck
   docker-compose.yml  # service, env file, named volumes, loopback-only port
-  docs/             # demo GIF
 ```
 
 ## Technical decisions
