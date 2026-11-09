@@ -6,7 +6,7 @@
 
 Chat with your class notes: a RAG app that answers questions from your PDFs and cites document and page. Python, FastAPI, ChromaDB, Gemini.
 
-![Demo](docs/demo.gif)
+https://github.com/user-attachments/assets/84c4cba9-bfc3-4f3c-8c82-9f875c3a854c
 
 ## Features
 
