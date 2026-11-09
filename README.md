@@ -1,6 +1,12 @@
 # notes-rag
 
+[![CI](https://github.com/HugoPello/notes-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/HugoPello/notes-rag/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python 3.14](https://img.shields.io/badge/python-3.14-blue.svg)](https://www.python.org/)
+
 Chat with your class notes: a RAG app that answers questions from your PDFs and cites document and page. Python, FastAPI, ChromaDB, Gemini.
+
+![Demo](docs/demo.gif)
 
 ## Features
 
@@ -166,6 +172,13 @@ pytest
 ```
 
 Gemini is faked and Chroma uses temporary folders, so the tests make no API calls and need no network.
+
+## Built with AI agents
+
+This project was developed in phases with orchestrated Claude Code agents: an architect proposed designs,
+an implementer wrote the code and tests, and a researcher checked documentation. I made the decisions,
+chose between the alternatives and reviewed every phase before committing it. The workflow is documented in
+[CLAUDE.md](CLAUDE.md), [.claude/agents/](.claude/agents/) and [PROJECT_STATUS.md](PROJECT_STATUS.md).
 
 ## License
 

@@ -87,3 +87,5 @@ Current phase: **done** (all 6 phases complete)
 - [x] CI: `.github/workflows/ci.yml` runs `pytest` on push/PR to `main`, Python 3.14 (same as the
   Dockerfile), pip cache, read-only token, no secrets. Verified locally on 3.14.6: 82 passed, also
   with no API key and network blocked. No ruff (not needed; default rules already pass).
+- [x] README: CI, MIT and Python 3.14 badges; `![Demo](docs/demo.gif)` slot + `docs/.gitkeep`
+  (GIF pending, recorded by the user); short "Built with AI agents" section. Relative links checked.
