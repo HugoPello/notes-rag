@@ -89,3 +89,7 @@ Current phase: **done** (all 6 phases complete)
   with no API key and network blocked. No ruff (not needed; default rules already pass).
 - [x] README: CI, MIT and Python 3.14 badges; `![Demo](docs/demo.gif)` slot + `docs/.gitkeep`
   (GIF pending, recorded by the user); short "Built with AI agents" section. Relative links checked.
+- [x] Hygiene audit, no issues found: `.gitignore` covers `.env`, `chroma_db/`, `data/*`, `.venv/`,
+  `.pytest_cache/` (checked with `git check-ignore`). Full history (all branches) scanned for API key
+  patterns, PDFs/`.env`/DB files and blobs > 200 KB: nothing found. Decided to keep `CLAUDE.md`,
+  `.claude/` and this file in the root (`.claude/agents/` must stay there; the workflow is part of the story).
