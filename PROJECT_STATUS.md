@@ -82,3 +82,8 @@ Current phase: **done** (all 6 phases complete)
     `docs/` entry were removed from the README. Option for later: upload a short MP4 through the
     GitHub README editor, or add a GIF under 3 MB as `docs/demo.gif`.
 - Project complete: all phases merged into `main`. Optional future work: conversation memory, delete endpoint, OCR, CI.
+
+## Polish (portfolio) — branch `chore/polish`, one commit per step
+- [x] CI: `.github/workflows/ci.yml` runs `pytest` on push/PR to `main`, Python 3.14 (same as the
+  Dockerfile), pip cache, read-only token, no secrets. Verified locally on 3.14.6: 82 passed, also
+  with no API key and network blocked. No ruff (not needed; default rules already pass).
