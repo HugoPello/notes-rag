@@ -81,15 +81,18 @@ Current phase: **done** (all 6 phases complete)
   - Demo GIF/video skipped for now (a 38 MB GIF was too big for the repo); the image line and the
     `docs/` entry were removed from the README. Option for later: upload a short MP4 through the
     GitHub README editor, or add a GIF under 3 MB as `docs/demo.gif`.
-- Project complete: all phases merged into `main`. Optional future work: conversation memory, delete endpoint, OCR, CI.
+- Project complete: all phases merged into `main`. Optional future work: conversation memory, delete endpoint, OCR.
 
 ## Polish (portfolio) — branch `chore/polish`, one commit per step
 - [x] CI: `.github/workflows/ci.yml` runs `pytest` on push/PR to `main`, Python 3.14 (same as the
   Dockerfile), pip cache, read-only token, no secrets. Verified locally on 3.14.6: 82 passed, also
   with no API key and network blocked. No ruff (not needed; default rules already pass).
-- [x] README: CI, MIT and Python 3.14 badges; `![Demo](docs/demo.gif)` slot + `docs/.gitkeep`
-  (GIF pending, recorded by the user); short "Built with AI agents" section. Relative links checked.
+- [x] README: CI, MIT and Python 3.14 badges; demo slot under the first sentence; short
+  "Built with AI agents" section. Relative links checked.
 - [x] Hygiene audit, no issues found: `.gitignore` covers `.env`, `chroma_db/`, `data/*`, `.venv/`,
   `.pytest_cache/` (checked with `git check-ignore`). Full history (all branches) scanned for API key
   patterns, PDFs/`.env`/DB files and blobs > 200 KB: nothing found. Decided to keep `CLAUDE.md`,
   `.claude/` and this file in the root (`.claude/agents/` must stay there; the workflow is part of the story).
+- [x] Demo: a 9 MB GIF was too heavy, so the demo is an MP4 uploaded through the GitHub README editor
+  (hosted by GitHub, not in the repo). The GIF was removed; `docs/` was dropped as it is no longer needed.
+  Note: the GIF (~9 MB) stays in git history (commit `16c9442`); not rewritten on purpose.
